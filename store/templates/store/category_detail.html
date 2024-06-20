@@ -1,0 +1,65 @@
+{% extends 'store/base.html' %}}
+
+
+{% block content%}
+
+
+<div class="container py-3">
+
+
+    <div class="container px-4 pb-5" id="hanging-icons">
+        <div class="row mb-4 border-bottom">
+            <div class="col-3 text-center">
+                <a class="px-5 btn btn-warning" href="{% url 'store:catalog_home'%}">Каталог</a>
+            </div>
+
+
+            <div class="col-9 text-center">
+                <form class="d-flex mb-3" role="search" method="get" action="">
+                    <input type="text" name="search_query" class="form-control me-2" placeholder="Искать в Сарафане"
+                           aria-label="Search" id="id_search_query"
+                           value="{% if search_query%}{{search_query}}{% endif %}">
+                    <button class="btn btn-outline-success" type="submit">Поиск</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="image-container row">
+        {% for object in object_list %}
+
+        <div class="col-4">
+            <a href="catalog/{{object.slug}}" class="text-decoration-none" style=" color:black">
+                <div class="card-group">
+                    <div class="card m-4" style="background-color:#CFCFCF;">
+                        <div class="card-body text-center border" style="background-color:#F8C41C;">
+                            <h5 class="card-title">{{object}}</h5>
+                        </div>
+                        <img src=" media/{{object.img}}" class="card-img-top p-1" style="width:100%; height:auto">
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+        {% endfor %}
+    </div>
+
+</div>
+
+
+<style>
+    .image-container img {
+               transition: transform 0.3s ease-in-out;
+           }
+
+    .image-container img:hover {
+               transform: scale(1.2);
+           }
+</style>
+
+
+{% endblock %}
+
+
