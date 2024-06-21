@@ -1,0 +1,79 @@
+{% extends 'store/base.html' %}}
+
+
+{% block content%}
+
+
+<div class="container py-3">
+
+    <!--                        <img src="/media/{{object.img}}" class="card-img-top p-1" style="width:100%; height:auto">-->
+
+
+    <div class="row align-items-start">
+        <div class="col-3 border-start border-end">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                {% for object in object_list %}
+                <button class="nav-link  position-relative {% if object.pk == 1 %}active{% endif %}"
+                        id="v-pills-{{object.pk}}-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#v-pills-{{object.pk}}" type="button" role="tab"
+                        aria-controls="v-pills-{{object.pk}}"
+                        aria-selected="true">{{object}}
+
+                    <!--                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">10+</span>-->
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                {% for object_t in object_list %}
+
+
+                <div class="tab-pane fade {% if object_t.pk == 1 %}show active{% endif %}"
+                     id="v-pills-{{object_t.pk}}" role="tabpanel"
+                     aria-labelledby="v-pills-{{object_t.pk}}-tab">
+                    {% for object in Subcategory %}
+                    {% if object.category == object_t %}
+                    <div class="row pb-2">
+                        <div class="col-10" style="color: #00ABBA">
+                            <div class="row justify-content-center m-0 p-0">
+                                <div class="col-12 text-success m-0 p-0">
+                                    <a class="m-0 p-0" href="{%url 'product:view' object.pk %}"
+                                       style="text-decoration: none">
+                                        <h5 class="m-0 p-0">
+                                            {{object}}
+                                        </h5>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<style>
+    .image-container img {
+               transition: transform 0.3s ease-in-out;
+           }
+
+    .image-container img:hover {
+               transform: scale(1.2);
+           }
+
+</style>
+
+
+{% endblock %}
+
+

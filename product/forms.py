@@ -1,5 +1,6 @@
 from django import forms
-from store.models import Category
+
+from product.models import Category
 from users.forms import StyleFormMixin
 
 

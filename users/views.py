@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
+from cart.models import Cart
 from users.forms import UserProfileForm, UserRegisterForm
 from users.models import User
 
@@ -21,3 +22,11 @@ class ProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        if user.is_authenticated:
+            context['count'] = Cart.objects.filter(user=user).count()
+        return context
