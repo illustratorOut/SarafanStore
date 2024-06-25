@@ -115,14 +115,15 @@ class Command(BaseCommand):
              }]
         len_subcategory = len(subcategory[0].keys())
 
-        for i in range(1, len_subcategory):
+        for i in range(1, len_subcategory + 1):
             dict_subcategory = {index + 1: {'title': data, 'category': Category.objects.filter(pk=i)[0]} for index, data
                                 in enumerate(subcategory[0][i])}
 
             for row in dict_subcategory:
                 title = dict_subcategory[row]['title']
+                category = dict_subcategory[row]['category']
 
-                if Subcategory.objects.filter(title=title):
+                if Subcategory.objects.filter(title=title, category=category):
                     print(f'Подкатегория  "{Fore.RED}{title}{Fore.RESET}" уже существует!')
                 else:
                     product = Subcategory.objects.create(**dict_subcategory[row])
@@ -131,51 +132,31 @@ class Command(BaseCommand):
 
     def create_product(self):
         '''Создать Продукты'''
-        product = [
-            ('Тыква круглая ~2 кг', 140, 'Овощи'),
-            ('Помидоры красные Global Village Сливовидные 600 г', 126, 'Овощи'),
-            ('Перец красный', 69, 'Овощи'),
-            ('Груша Форель', 200, 'Фрукты'),
-            ('Бананы мини Эквадор', 137, 'Фрукты'),
-            ('Грейпфрут красный Египет ~500 г', 85, 'Фрукты'),
-            ('Салат Айсберг', 109.99, 'Зелень, салаты'),
-            ('Душица Московский в горшочке', 149.99, 'Зелень, салаты'),
-            ('Набор зелени Metro Chef лук-укроп-петрушка 250 г', 189, 'Зелень, салаты'),
-            ('Голубика Market Collection свежая Марокко 250 г', 100, 'Ягоды'),
-            ('Виноград темный без косточек ~300 г', 90, 'Ягоды'),
-            ('Крыжовник 500 г', 229.99, 'Ягоды'),
-            ('Шампиньоны свежие Global Village 250 г', 66.99, 'Грибы'),
-            ('Лисички METRO Chef целые замороженные 400 г', 322.05, 'Грибы'),
-            ('Шампиньоны АШАН Золотая птица Королевские целые 400 г', 129.99, 'Грибы'),
-            ('Кукуруза Green Ray деликатесная 340 г', 100, 'Овощные консервы'),
-            ('Горошек салатный Верная цена стерилизованный 360 г', 53, 'Овощные консервы'),
-            ('Мякоть помидора Pomito 1 кг', 319, 'Овощные консервы'),
-            ('Персики Metro Chef половинки очищенные в сиропе 820 г', 100, 'Фруктовые, ягодные консервы'),
-            ('Ананасы Lutik ломтики в сиропе 560 г', 219.99, 'Фруктовые, ягодные консервы'),
-            ('Брусника Егорьевские традиции дробленая с сахаром 300 г', 119, 'Фруктовые, ягодные консервы'),
-            ('Шпинат свежемороженый резаный', 75, 'Замороженные овощи, фрукты'),
-            ('Капуста брокколи Ваш выбор замороженная 400 г', 117.99, 'Замороженные овощи, фрукты'),
-            ('Капуста цветная Ваш выбор замороженная 400 г', 99.99, 'Замороженные овощи, фрукты'),
-            ('Финики сушеные светлые с косточкой 500 г', 100, 'Орехи, сухофрукты'),
-            ('Грецкий орех очищенный 500 г', 130, 'Орехи, сухофрукты'),
-            ('Орехи кедровые Семушка очищенные 50 г', 199.99, 'Орехи, сухофрукты'),
-            ('Клюква Каждый День замороженная 300 г', 129.99, 'Фрукты, ягоды'),
-            ('Маракуйя Agrobar протертая замороженная 1 кг', 1149, 'Фрукты, ягоды'),
-            ("Облепиха О'кей замороженная 300 г", 146.99, 'Фрукты, ягоды'),
-        ]
+        with open('data.txt', 'r', encoding='utf-8') as file:
+            rows = file.readlines()
+            for r in rows:
+                try:
+                    product = str(r).replace('\n', '').split('#')
+                    title, price, img, subcategory = product
 
-        dict_product = {index + 1: {'title': data[0], 'price': data[1], 'img': f'product/{index + 1}.jpg',
-                                    'subcategory': Subcategory.objects.filter(title=data[2])[0]}
-                        for index, data in enumerate(product)}
+                    dict_product = {
+                        'title': title,
+                        'price': float(price),
+                        'img': img,
+                        'subcategory': Subcategory.objects.filter(title=subcategory).first()
+                    }
 
-        for row in dict_product:
-            title = dict_product[row]['title']
-            if Product.objects.filter(title=title):
-                print(f'Продукт  "{Fore.RED}{title}{Fore.RESET}" уже существует!')
-            else:
-                product = Product.objects.create(**dict_product[row])
-                product.save()
-                print(f'Продукт {Fore.GREEN}{title}{Fore.RESET} создан!')
+                    title = dict_product['title']
+                    if Product.objects.filter(title=title, subcategory=dict_product['subcategory']):
+                        print(f'Продукт  "{Fore.RED}{title}{Fore.RESET}" уже существует!')
+                    else:
+                        product = Product.objects.create(**dict_product)
+                        product.save()
+                        print(f'Продукт {Fore.GREEN}{title}{Fore.RESET} создан!')
+
+                except Exception as e:
+                    print(e)
+                    print(dict_product)
 
     def handle(self, *args, **options):
         self.create_category()

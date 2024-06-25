@@ -6,22 +6,41 @@
 
 <div class="container py-3">
 
-    <!--                        <img src="/media/{{object.img}}" class="card-img-top p-1" style="width:100%; height:auto">-->
-
-
     <div class="row align-items-start">
         <div class="col-3 border-start border-end">
             <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 {% for object in object_list %}
-                <button class="nav-link  position-relative {% if object.pk == 1 %}active{% endif %}"
-                        id="v-pills-{{object.pk}}-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#v-pills-{{object.pk}}" type="button" role="tab"
-                        aria-controls="v-pills-{{object.pk}}"
-                        aria-selected="true">{{object}}
 
-                    <!--                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">10+</span>-->
-                </button>
+
+                <div class="col-12 p-2">
+                    <a class="btn btn-light col-12 text-center p-2"
+                       style="border: 2px solid black; background: #198754;"
+                       data-bs-toggle="collapse"
+                       href="#collapseExample{{object.pk}}"
+                       role="button"
+                       aria-expanded="false"
+                       aria-controls="collapseExample"><h6>{{object}}</h6></a>
+                </div>
+
+                <div class="collapse pt-2" id="collapseExample{{object.pk}}">
+                    {% for item in Subcategory%}
+                    {% if item.category == object %}
+                    <div class="row justify-content-center m-1">
+                        <div class="text-center col-11">
+                            <div class="list-group">
+                                <a href="{% url 'product:view' item.pk %}"
+                                   class="p-2 mx-3 btn btn-outline-success text-decoration-none text-reset"
+                                   aria-current="true">
+                                    {{item}}
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
                 {% endfor %}
             </div>
         </div>
@@ -29,36 +48,29 @@
 
         <div class="col-9">
             <div class="tab-content" id="v-pills-tabContent">
-                {% for object_t in object_list %}
+                <div class="row">
 
 
-                <div class="tab-pane fade {% if object_t.pk == 1 %}show active{% endif %}"
-                     id="v-pills-{{object_t.pk}}" role="tabpanel"
-                     aria-labelledby="v-pills-{{object_t.pk}}-tab">
-                    {% for object in Subcategory %}
-                    {% if object.category == object_t %}
-                    <div class="row pb-2">
-                        <div class="col-10" style="color: #00ABBA">
-                            <div class="row justify-content-center m-0 p-0">
-                                <div class="col-12 text-success m-0 p-0">
-                                    <a class="m-0 p-0" href="{%url 'product:view' object.pk %}"
-                                       style="text-decoration: none">
-                                        <h5 class="m-0 p-0">
-                                            {{object}}
-                                        </h5>
-                                    </a>
+                    {% for object in object_list %}
+                        <div class="col-4 p-2">
+                            <a class="p-2 mx-3 btn btn-outline-success text-decoration-none text-reset"
+                               href="{% url 'product:category_view' object.slug %}">
+                                <div class="image-container card">
+                                    <img class="card-img-top p-1 " src="/media/{{object.img}}"
+                                         style="width:100%; height:auto">
+                                    <div class="card-footer">
+                                        <h5 class="card-title text-center">{{object}}</h5>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
-                    </div>
-                    {% endif %}
                     {% endfor %}
+
+
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
-
 </div>
 
 
@@ -68,8 +80,13 @@
            }
 
     .image-container img:hover {
-               transform: scale(1.2);
+               transform: scale(1.1);
            }
+
+    .image-container .card-footer {
+                background:#ffc107
+           }
+
 
 </style>
 

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from product.views import ProductListView, ProductCreateView, ProductUpdateView, ProductDeleteView, CategoryListView, \
-    CategoryCreateView, CategoryUpdateView, ProductDetailView
+    CategoryCreateView, CategoryUpdateView, ProductDetailView, CategoryDetailView
 from product.apps import ProductConfig
 
 app_name = ProductConfig.name
@@ -9,6 +9,7 @@ app_name = ProductConfig.name
 urlpatterns = [
     # Category
     path('', CategoryListView.as_view(), name='category_home'),
+    path('<slug>', CategoryDetailView.as_view(), name='category_view'),
     path('create/', CategoryCreateView.as_view(), name='category_create'),
     path('update/<int:pk>/', CategoryUpdateView.as_view(), name='category_update'),
 

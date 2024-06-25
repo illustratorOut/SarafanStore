@@ -1,0 +1,108 @@
+{% extends 'store/base.html' %}}
+
+
+{% block content%}
+
+
+<div class="container py-3">
+
+
+    <div class="image-container row">
+
+        {% for object1 in object_list %}
+
+        <div class="image-container row">
+            <div class="col-12 pb-3 card" style="background: #ffc107;">
+                <H1>{{object1.first.subcategory}}</H1>
+            </div>
+            {% for object in object1 %}
+            <div class="col-4 p-2">
+                <div class="height d-flex justify-content-center align-items-center">
+
+                    <div class="card p-3 m-1">
+
+                        <div class="d-flex justify-content-between align-items-center ">
+                            <div class="mt-2">
+                                <h6 class="text-uppercase">{{object}}</h6>
+                                <div class="mt-5">
+                                    <h5 class="text-uppercase mb-0">Стоимость</h5>
+                                    <h1 class="main-heading mt-0">{{object.price}} ₽</h1>
+
+                                </div>
+                            </div>
+                            <div class="image">
+                                {% if object.img %}
+                                <img src="/media/{{object.img}}" width="200">
+                                {% else %}
+                                <img src="https://i.imgur.com/MGorDUi.png" width="200">
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+                            <span>{{object.subcategory}}</span>
+                            <div class="colors">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+
+
+                        <p>{{object.subcategory.category}}</p>
+
+                        {% if user.is_authenticated %}
+                        <a href="{%url 'cart:add_to_cart' object.pk %}">
+                            <button class="btn btn-success">Добавить в корзину</button>
+                        </a>
+                        {% else %}
+                        <a href="{%url 'users:login'%}">
+                            <button class="btn btn-success">Добавить в корзину</button>
+                        </a>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% endfor %}
+
+        <div class="col-12 p-5">
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">2</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .image-container img {
+               transition: transform 0.3s ease-in-out;
+           }
+
+    .image-container img:hover {
+               transform: scale(1.2);
+           }
+</style>
+
+
+{% endblock %}
+
+

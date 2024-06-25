@@ -22,9 +22,11 @@ class CartListView(LoginRequiredMixin, ListView):
         user = self.request.user
 
         if user.is_authenticated:
+            context['all_count'] = sum([item.quantity for item in Cart.objects.filter(user=user)])
             context['count'] = Cart.objects.filter(user=user).count()
             context['all_price'] = sum([item.product.price * item.quantity for item in Cart.objects.filter(user=user)])
             context['object_list'] = Cart.objects.filter(user=user)
+
         return context
 
 
@@ -65,18 +67,35 @@ def add_to_cart(request, pk):
     if Cart.objects.filter(user=user, product=product):
         res = Cart.objects.filter(user=user, product=product)[0]
         a = res.quantity + 1
-        Cart.objects.filter(product=product).update(quantity=a)
+        Cart.objects.filter(user=user, product=product).update(quantity=a)
     else:
         cart, _ = Cart.objects.get_or_create(user=user, product=product, quantity=1)
 
     return redirect('cart:home')
 
 
-def delite_to_cart(request, pk):
-    print(pk)
+def delete_quantity_to_cart(request, pk):
     product = Product.objects.get(pk=pk)
     user = request.user
 
-    print(product)
-    cart = Cart.objects.get(user=user, product=product).delete()
+    if Cart.objects.filter(user=user, product=product).first().quantity != 1:
+        res = Cart.objects.filter(user=user, product=product)[0]
+        a = res.quantity - 1
+        Cart.objects.filter(user=user, product=product).update(quantity=a)
+    else:
+        Cart.objects.get(user=user, product=product).delete()
+
+    return redirect('cart:home')
+
+
+def delete_to_cart(request, pk):
+    product = Product.objects.get(pk=pk)
+    user = request.user
+    Cart.objects.get(user=user, product=product).delete()
+    return redirect('cart:home')
+
+
+def all_delete_to_cart(request):
+    user = request.user
+    Cart.objects.filter(user=user).delete()
     return redirect('cart:home')

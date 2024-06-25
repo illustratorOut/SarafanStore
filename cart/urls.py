@@ -2,7 +2,7 @@ from django.urls import path
 
 from cart.apps import CartConfig
 from cart.views import CartListView, CartDetailView, CartCreateView, CartUpdateView, CartDeleteView, add_to_cart, \
-    delite_to_cart
+    delete_to_cart, all_delete_to_cart, delete_quantity_to_cart
 
 app_name = CartConfig.name
 
@@ -15,5 +15,7 @@ urlpatterns = [
     path('delete/<int:pk>/', CartDeleteView.as_view(), name='delete'),
 
     path('<int:pk>/', add_to_cart, name='add_to_cart'),
-    path('d/<int:pk>/', delite_to_cart, name='delite_to_cart'),
+    path('delete_quantity_to_cart/<int:pk>/', delete_quantity_to_cart, name='delete_quantity_to_cart'),
+    path('d/<int:pk>/', delete_to_cart, name='delite_to_cart'),
+    path('del/', all_delete_to_cart, name='all_delite_to_cart'),
 ]
