@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core import paginator
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic.list import MultipleObjectMixin
 
-from cart.models import Cart
+from cart.models import Cart, CartProduct
 from product.forms import ProductForm
 from product.models import Product, Category, Subcategory
 
@@ -10,7 +12,8 @@ from product.models import Product, Category, Subcategory
 class ProductDetailView(DetailView):
     """Класс просмотра 1 продукта"""
     model = Product
-    paginate_by = 1
+
+    # paginate_by = 1
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -21,12 +24,12 @@ class ProductDetailView(DetailView):
         category_pk = context.get('object').pk
         context['object_list'] = Product.objects.filter(subcategory=category_pk)
         context['subcategory'] = Subcategory.objects.filter(pk=category_pk).first()
+
         return context
 
 
 class ProductListView(ListView):
     """Класс отображения продукта"""
-    paginate_by = 30
     model = Product
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -34,7 +37,7 @@ class ProductListView(ListView):
         user = self.request.user
 
         if user.is_authenticated:
-            context['count'] = Cart.objects.filter(user=user).count()
+            context['count'] = CartProduct.objects.filter(user=user).count()
 
         search_query = self.request.GET.get('search_query')
         if search_query:
@@ -84,7 +87,7 @@ class CategoryDetailView(DetailView):
 
         user = self.request.user
         if user.is_authenticated:
-            context['count'] = Cart.objects.filter(user=user).count()
+            context['count'] = CartProduct.objects.filter(user=user).count()
 
         category_slug = context.get('object').slug
         res = Subcategory.objects.filter(category__slug=category_slug)
@@ -104,7 +107,7 @@ class CategoryListView(ListView):
         user = self.request.user
 
         if user.is_authenticated:
-            context['count'] = Cart.objects.filter(user=user).count()
+            context['count'] = CartProduct.objects.filter(user=user).count()
 
         search_query = self.request.GET.get('search_query')
         if search_query:
@@ -143,3 +146,6 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     """Класс удаления категории"""
     model = Category
     success_url = reverse_lazy('store:home')
+
+
+

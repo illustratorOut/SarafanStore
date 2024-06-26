@@ -100,3 +100,16 @@ class Product(models.Model):
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
         ordering = ('title',)
+
+
+class ProductImageInline(models.Model):
+    '''Модель картинок к продукту'''
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    img = models.ImageField(upload_to='product', verbose_name='Изображение', **NULLABLE)
+
+    def __str__(self):
+        return str(self.img)
+
+    class Meta:
+        verbose_name = 'Картинка'
+        verbose_name_plural = 'Картинки'

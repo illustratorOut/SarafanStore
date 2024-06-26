@@ -51,7 +51,7 @@
                     <p>{{object.subcategory.category}}</p>
 
                     {% if user.is_authenticated %}
-                    <a href="{%url 'cart:add_to_cart' object.pk %}">
+                    <a href="{%url 'cart:product_add_cart' object.pk %}">
                         <button class="btn btn-success">Добавить в корзину</button>
                     </a>
                     {% else %}

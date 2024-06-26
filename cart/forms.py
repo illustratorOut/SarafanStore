@@ -1,17 +1,10 @@
 from django import forms
 
-from cart.models import Cart
+from cart.models import CartProduct
 from users.forms import StyleFormMixin
 
 
 class CartForm(StyleFormMixin, forms.ModelForm):
     class Meta:
-        model = Cart
+        model = CartProduct
         exclude = ('release_date', )
-
-        # widgets = {
-        #     'price': forms.NumberInput(
-        #         attrs={
-        #             'min': 1,
-        #         }),
-        # }

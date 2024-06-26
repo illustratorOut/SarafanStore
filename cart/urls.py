@@ -1,21 +1,27 @@
 from django.urls import path
 
 from cart.apps import CartConfig
-from cart.views import CartListView, CartDetailView, CartCreateView, CartUpdateView, CartDeleteView, add_to_cart, \
-    delete_to_cart, all_delete_to_cart, delete_quantity_to_cart
+from cart.view.API_cart import CartListAPIView, CartCreateAPIView, CartDeleteAPIView, CartUpdateAPIView, \
+    CartCleanAPIView, CartInfoAPIView
+from cart.view.cart import CartListView, product_add_cart, change_qty_cart, clean_cart, product_delete_cart
 
 app_name = CartConfig.name
 
 urlpatterns = [
-    # CART
+    # Cart
     path('', CartListView.as_view(), name='home'),
-    path('view/<int:pk>/', CartDetailView.as_view(), name='view'),
-    path('create/', CartCreateView.as_view(), name='create'),
-    path('update/<int:pk>/', CartUpdateView.as_view(), name='update'),
-    path('delete/<int:pk>/', CartDeleteView.as_view(), name='delete'),
+    path('create/<int:pk>/', product_add_cart, name='product_add_cart'),
+    path('change/<int:pk>/', change_qty_cart, name='change_qty_cart'),
+    path('clean/', clean_cart, name='clean_cart'),
+    path('delete/<int:pk>/', product_delete_cart, name='product_delete_cart'),
 
-    path('<int:pk>/', add_to_cart, name='add_to_cart'),
-    path('delete_quantity_to_cart/<int:pk>/', delete_quantity_to_cart, name='delete_quantity_to_cart'),
-    path('d/<int:pk>/', delete_to_cart, name='delite_to_cart'),
-    path('del/', all_delete_to_cart, name='all_delite_to_cart'),
+    # API Cart
+    path('API/', CartListAPIView.as_view()),
+    path('API/create/', CartCreateAPIView.as_view()),
+    path('API/update/<int:pk>/', CartUpdateAPIView.as_view()),
+    path('API/delete/<int:pk>/', CartDeleteAPIView.as_view()),
+
+    path('API/clean/<int:pk>/', CartCleanAPIView.as_view()),
+    path('API/info/', CartInfoAPIView.as_view()),
+
 ]

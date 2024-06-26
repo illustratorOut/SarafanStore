@@ -1,7 +1,13 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from product.models import Product, Category, Subcategory
+from product.models import Product, Category, Subcategory, ProductImageInline
+
+
+class ProductImage(admin.TabularInline):
+    ''' '''
+    model = ProductImageInline
+    extra = 0
 
 
 @admin.register(Category)
@@ -46,6 +52,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('subcategory', 'author',)
     search_fields = ('title',)
     list_display_links = ('title',)
+    inlines = [ProductImage]
 
     def image_show(self, obj):
         if obj.img:
